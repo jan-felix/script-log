@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[27]:
 
 
 import pandas as pd
@@ -10,11 +10,36 @@ import matplotlib.pyplot as plt
 import os
 import statsmodels.api as sm
 import numpy as np
+import streamlit as st 
 
 
 # # Data Import and Preparation
 
-# In[2]:
+# In[31]:
+
+
+st.title("Stepwise Regression Calculator")
+
+uploaded_file = st.file_uploader("Chose a CSV file that contains the date for the regression.")
+st.text("This must be a csv file that his build like below:")
+
+sample_df = pd.DataFrame({"Variable A":[1,2,3],"Variable B":[2,6,1],"Further Variables":[5,6,7]},index=pd.DatetimeIndex(["31/12/2020","31/12/2021","31/12/2022"]))
+sample_df.head(3)
+st.text("The first column of the csv must have dates, the first rows must have variables. Each variable has its own column.")
+
+
+# In[43]:
+
+
+if uploaded_file is not None:
+    data_df = pd.read_csv(uploaded_file,index_col=0)
+    data_df.index = pd.DatetimeIndex(data_df.index)
+    st.write("Does this look right to you?")
+    st.write(dataframe.head())
+y_var = st.selectbox(label="What is your endogenous variable?",options=data_df.columns.to_list())
+
+
+# In[36]:
 
 
 data_df = pd.read_excel('Stepwise_JJ.xlsx', index_col=0,sheet_name="Python Data", engine="openpyxl")
@@ -23,7 +48,7 @@ data_df.head(1)
 
 # # Data Overview
 
-# In[11]:
+# In[37]:
 
 
 def regression_plots(regression_data_df = data_df, y_variable = "RoE Japan", columns = 3,savefig=True):
@@ -38,22 +63,26 @@ def regression_plots(regression_data_df = data_df, y_variable = "RoE Japan", col
                 sns.regplot(x = regression_data_df[column],y=regression_data_df[y_variable],ax=ax,robust=False)
     fig.tight_layout()
     if savefig==True:
-        fig.savefig("Filtered Variables.png")    
+        fig.savefig("Filtered Variables.png")   
+    return fig 
 
 
-# In[9]:
+# In[47]:
 
 
-columns = 4
+st.text("Lets take a first look at the individual relationships.")
+
+columns = st.selectbox("How many columns of charts should the below have?", options=[1,2,3,4,5],index=3)
+
+
 rows = int(np.ceil((len(data_df.columns)-1)/columns))
 fig,axs = plt.subplots(rows,columns, sharey=True,figsize = (16,16))
 for col,ax in enumerate(axs.flatten()):
     if col+1 <len(data_df.columns):
         column = data_df.columns[col+1]
-        #print(data_df[column].head(2))
-        sns.regplot(x = data_df[column],y=data_df["RoE Japan"],ax=ax,robust=False)
+        sns.regplot(x = data_df[column],y=data_df[y_var],ax=ax,robust=False)
 fig.tight_layout()
-fig.savefig("Data Overview.png")
+st.pyplot(fig=fig)
 
 
 # # Stepwise Regression
@@ -107,21 +136,15 @@ def stepwise_regression(regression_data_df = data_df, y_variable = "RoE Japan",c
 # In[21]:
 
 
+st.text("Below you see the regression results")
 stepwise_regression(regression_data_df = data_df, y_variable = "RoE Japan",constant = True, max_p = 0.05,only_positive=True)[0].summary()
-file = open("regression_output.text","w")
-file.write(stepwise_regression(regression_data_df = data_df, y_variable = "RoE Japan",constant = True, max_p = 0.05,only_positive=True)[0].summary().as_text())
-file.close()
 
 
-# In[7]:
+# In[48]:
 
 
-filtered_var_df = stepwise_regression(regression_data_df = data_df, y_variable = "RoE Japan",constant = True, max_p = 0.05)[1]
-filtered_var_df.head(2)
 
-
-# In[13]:
-
+columns = st.selectbox("How many columns of charts should the below have?", options=[1,2,3,4,5],index=3)
 
 regression_plots(regression_data_df = filtered_var_df, y_variable = "RoE Japan", columns = 1,savefig=True)
 
