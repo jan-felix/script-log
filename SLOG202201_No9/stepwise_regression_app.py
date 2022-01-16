@@ -113,7 +113,7 @@ if uploaded_file is not None:
     data_df = pd.read_csv(uploaded_file,index_col=0)
     data_df.index = pd.DatetimeIndex(data_df.index)
     st.write("Does this look right to you?")
-    st.write(dataframe.head())
+    st.write(data_df.head())
     y_var = st.selectbox(label="What is your endogenous variable?",options=data_df.columns.to_list())
     st.text("Lets take a first look at the individual relationships.")
 
