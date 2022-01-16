@@ -26,10 +26,13 @@ y_var = ""
 
 
 def regression_plots(regression_data_df = data_df, y_variable = y_var, columns = 3):
+    
     rows = int(np.ceil((len(regression_data_df.columns)-1)/columns))
     fig,axs = plt.subplots(rows,columns, sharey=True,figsize = (rows*4,rows*4))
     if len(axs)==1:
-        sns.regplot(x = regression_data_df[regression_data_df.columns.drop(y_variable).to_list()],y=regression_data_df[y_variable],ax=ax,robust=False)
+        sns.regplot(x = regression_data_df[regression_data_df.columns.drop(y_variable).to_list()],
+                    y=regression_data_df[y_variable],ax=ax,robust=False)
+    
     for col,ax in enumerate(axs.flatten()):
         if col <len(regression_data_df.columns):
             column = regression_data_df.columns[col]
@@ -152,6 +155,6 @@ if uploaded_file is not None:
     filtered_var_df = stepwise_regression(regression_data_df = data_df, y_variable = y_var,constant = True, max_p = 0.05,only_positive=True)[1]
     columns = st.selectbox("How many columns of charts should the below have?", options=[1,2,3,4,5],index=3,key="003")
 
-    reg_fig = regression_plots(regression_data_df = filtered_var_df, y_variable = "RoE Japan", columns = 1)
+    reg_fig = regression_plots(regression_data_df = filtered_var_df, y_variable = y_var, columns = columns)
     st.pyplot(fig=reg_fig)
 
