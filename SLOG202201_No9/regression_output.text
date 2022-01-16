@@ -1,0 +1,28 @@
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:              RoE Japan   R-squared:                       0.579
+Model:                            OLS   Adj. R-squared:                  0.572
+Method:                 Least Squares   F-statistic:                     81.04
+Date:                Sun, 16 Jan 2022   Prob (F-statistic):           7.11e-23
+Time:                        18:10:41   Log-Likelihood:                -174.96
+No. Observations:                 121   AIC:                             355.9
+Df Residuals:                     118   BIC:                             364.3
+Df Model:                           2                                         
+Covariance Type:            nonrobust                                         
+===========================================================================================================
+                                              coef    std err          t      P>|t|      [0.025      0.975]
+-----------------------------------------------------------------------------------------------------------
+const                                      19.1129      1.062     18.000      0.000      17.010      21.216
+OECD All Leading Indicator YoY Smoothed    14.4931      5.635      2.572      0.011       3.335      25.651
+JPN Trade Weighted Index Smoothed           0.1310      0.012     10.887      0.000       0.107       0.155
+==============================================================================
+Omnibus:                        0.021   Durbin-Watson:                   0.141
+Prob(Omnibus):                  0.990   Jarque-Bera (JB):                0.096
+Skew:                          -0.030   Prob(JB):                        0.953
+Kurtosis:                       2.876   Cond. No.                     5.27e+03
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 5.27e+03. This might indicate that there are
+strong multicollinearity or other numerical problems.
