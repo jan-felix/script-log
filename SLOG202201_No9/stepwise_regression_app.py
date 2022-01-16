@@ -114,10 +114,10 @@ if uploaded_file is not None:
     data_df.index = pd.DatetimeIndex(data_df.index)
     st.write("Does this look right to you?")
     st.write(data_df.head())
-    y_var = st.selectbox(label="What is your endogenous variable?",options=data_df.columns.to_list())
+    y_var = st.selectbox(label="What is your endogenous variable?",options=data_df.columns.to_list(),key="001")
     st.text("Lets take a first look at the individual relationships.")
 
-    columns = st.selectbox("How many columns of charts should the below have?", options=[1,2,3,4,5],index=3)
+    columns = st.selectbox("How many columns of charts should the below have?", options=[1,2,3,4,5],index=3,key="002")
 
 
     rows = int(np.ceil((len(data_df.columns)-1)/columns))
@@ -131,7 +131,7 @@ if uploaded_file is not None:
     st.text("Below you see the regression results")
     stepwise_regression(regression_data_df = data_df, y_variable = y_var,constant = True, max_p = 0.05,only_positive=True)[0].summary()
 
-    columns = st.selectbox("How many columns of charts should the below have?", options=[1,2,3,4,5],index=3)
+    columns = st.selectbox("How many columns of charts should the below have?", options=[1,2,3,4,5],index=3,key="003")
 
     reg_fig = regression_plots(regression_data_df = filtered_var_df, y_variable = "RoE Japan", columns = 1,savefig=True)
     st.pyplot(fig=reg_fig)
