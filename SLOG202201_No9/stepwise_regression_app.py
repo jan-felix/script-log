@@ -100,7 +100,7 @@ st.text("This must be a csv file that his build like below:")
 
 
 sample_df = pd.DataFrame({"Variable A":[1,2,3],"Variable B":[2,6,1],"Further Variables":[5,6,7]},index=pd.DatetimeIndex(["31/12/2020","31/12/2021","31/12/2022"]))
-sample_df.head(3)
+st.table(sample_df)
 st.text("The first column of the csv must have dates, the first rows must have variables. Each variable has its own column.")
 
 
