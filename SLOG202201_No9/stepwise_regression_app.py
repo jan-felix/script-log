@@ -106,7 +106,7 @@ st.text("The first column of the csv must have dates, the first rows must have v
 
 # # Process
 
-# In[56]:
+# In[60]:
 
 
 if uploaded_file is not None:
@@ -129,7 +129,8 @@ if uploaded_file is not None:
     fig.tight_layout()
     st.pyplot(fig=fig)
     st.text("Below you see the regression results")
-    stepwise_regression(regression_data_df = data_df, y_variable = y_var,constant = True, max_p = 0.05,only_positive=True)[0].summary()
+    st.latex(stepwise_regression(regression_data_df = data_df, y_variable = y_var,constant = True, max_p = 0.05,only_positive=True)[0].summary().as_latex()
+             )
     
     
     filtered_var_df = stepwise_regression(regression_data_df = data_df, y_variable = y_var,constant = True, max_p = 0.05,only_positive=True)[1]
