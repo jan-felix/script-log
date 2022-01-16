@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[27]:
+# In[50]:
 
 
 import pandas as pd
@@ -15,7 +15,13 @@ import streamlit as st
 
 # # Helper Functions
 
-# In[ ]:
+# In[57]:
+
+
+data_df = pd.DataFrame()
+
+
+# In[52]:
 
 
 def regression_plots(regression_data_df = data_df, y_variable = y_var, columns = 3):
@@ -76,13 +82,21 @@ def stepwise_regression(regression_data_df = data_df, y_variable = y_var,constan
 
 # # Intro
 
-# In[31]:
+# In[53]:
 
 
 st.title("Stepwise Regression Calculator")
 
+
+# In[54]:
+
+
 uploaded_file = st.file_uploader("Chose a CSV file that contains the date for the regression.")
 st.text("This must be a csv file that his build like below:")
+
+
+# In[55]:
+
 
 sample_df = pd.DataFrame({"Variable A":[1,2,3],"Variable B":[2,6,1],"Further Variables":[5,6,7]},index=pd.DatetimeIndex(["31/12/2020","31/12/2021","31/12/2022"]))
 sample_df.head(3)
@@ -91,7 +105,7 @@ st.text("The first column of the csv must have dates, the first rows must have v
 
 # # Process
 
-# In[43]:
+# In[56]:
 
 
 if uploaded_file is not None:
