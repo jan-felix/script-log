@@ -1,5 +1,5 @@
-pandas as pd
-seaborn as sns
+pandas
+seaborn
 matplotlib
 statsmodels
 numpy
