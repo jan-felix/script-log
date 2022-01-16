@@ -106,11 +106,21 @@ st.text("The first column of the csv must have dates, the first rows must have v
 
 # # Process
 
-# In[62]:
+# In[67]:
+
+
+format_dec = st.selectbox("German or English Format?", options=["German","English"],key="000")
+
+
+# In[68]:
 
 
 if uploaded_file is not None:
-    data_df = pd.read_csv(uploaded_file,index_col=0)
+    if format_dec == "German":
+        data_df = pd.read_csv(uploaded_file,delimiter=";",decimal=",", index_col=0).dropna()
+    if format_dec =="English":
+        data_df = pd.read_csv(uploaded_file,index_col=0).dropna()
+    
     data_df.index = pd.DatetimeIndex(data_df.index)
     st.write("Does this look right to you?")
     st.write(data_df.head())
