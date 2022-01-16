@@ -19,6 +19,7 @@ import streamlit as st
 
 
 data_df = pd.DataFrame()
+y_var = ""
 
 
 # In[52]:
