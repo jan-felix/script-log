@@ -76,8 +76,10 @@ def stepwise_regression(regression_data_df = data_df, y_variable = y_var,constan
             X = X[coeffs_pos.index.to_list()]
             model = sm.OLS(endog = Y, exog = X)
             results = model.fit()
-
-    relevant_vars = regression_data_df[X.columns.drop("const").to_list()+[y_variable]]
+    if "const" in X.columns:
+        relevant_vars = regression_data_df[X.columns.drop("const").to_list()+[y_variable]]
+    else:
+        relevant_vars = regression_data_df[X.columns.to_list()+[y_variable]]
     return results, relevant_vars,params_inc_neg
 
 
