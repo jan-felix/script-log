@@ -39,19 +39,12 @@ if uploaded_file is not None:
 y_var = st.selectbox(label="What is your endogenous variable?",options=data_df.columns.to_list())
 
 
-# In[36]:
-
-
-data_df = pd.read_excel('Stepwise_JJ.xlsx', index_col=0,sheet_name="Python Data", engine="openpyxl")
-data_df.head(1)
-
-
 # # Data Overview
 
 # In[37]:
 
 
-def regression_plots(regression_data_df = data_df, y_variable = "RoE Japan", columns = 3,savefig=True):
+def regression_plots(regression_data_df = data_df, y_variable = y_var, columns = 3):
     rows = int(np.ceil((len(regression_data_df.columns)-1)/columns))
     fig,axs = plt.subplots(rows,columns, sharey=True,figsize = (rows*4,rows*4))
     for col,ax in enumerate(axs.flatten()):
@@ -62,8 +55,6 @@ def regression_plots(regression_data_df = data_df, y_variable = "RoE Japan", col
             else:
                 sns.regplot(x = regression_data_df[column],y=regression_data_df[y_variable],ax=ax,robust=False)
     fig.tight_layout()
-    if savefig==True:
-        fig.savefig("Filtered Variables.png")   
     return fig 
 
 
@@ -90,7 +81,7 @@ st.pyplot(fig=fig)
 # In[5]:
 
 
-def stepwise_regression(regression_data_df = data_df, y_variable = "RoE Japan",constant = True, max_p = 0.05,only_positive=True):
+def stepwise_regression(regression_data_df = data_df, y_variable = y_var,constant = True, max_p = 0.05,only_positive=True):
     '''
     This function iterates over the given data frame, trying to explain the y variable by all variables except iteself.
     The process stops once all variables are below the specified p-value. 
@@ -137,7 +128,7 @@ def stepwise_regression(regression_data_df = data_df, y_variable = "RoE Japan",c
 
 
 st.text("Below you see the regression results")
-stepwise_regression(regression_data_df = data_df, y_variable = "RoE Japan",constant = True, max_p = 0.05,only_positive=True)[0].summary()
+stepwise_regression(regression_data_df = data_df, y_variable = y_var,constant = True, max_p = 0.05,only_positive=True)[0].summary()
 
 
 # In[48]:
@@ -146,5 +137,6 @@ stepwise_regression(regression_data_df = data_df, y_variable = "RoE Japan",const
 
 columns = st.selectbox("How many columns of charts should the below have?", options=[1,2,3,4,5],index=3)
 
-regression_plots(regression_data_df = filtered_var_df, y_variable = "RoE Japan", columns = 1,savefig=True)
+reg_fig = regression_plots(regression_data_df = filtered_var_df, y_variable = "RoE Japan", columns = 1,savefig=True)
+st.pyplot(fig=reg_fig)
 
