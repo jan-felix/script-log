@@ -28,7 +28,7 @@ def regression_plots(regression_data_df = data_df, y_variable = y_var, columns =
     
     rows = int(np.ceil((len(regression_data_df.columns)-1)/columns))
     fig,axs = plt.subplots(rows,columns, sharey=True,figsize = (rows*4,rows*4))
-    if len(axs)==1:
+    if type(axs) != np.ndarray:
         sns.regplot(x = regression_data_df[regression_data_df.columns.drop(y_variable).to_list()],
                     y=regression_data_df[y_variable],ax=axs,robust=False)
     
