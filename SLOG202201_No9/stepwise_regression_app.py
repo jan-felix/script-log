@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[50]:
+# In[11]:
 
 
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-import os
 import statsmodels.api as sm
 import numpy as np
 import streamlit as st 
@@ -15,14 +14,14 @@ import streamlit as st
 
 # # Helper Functions
 
-# In[57]:
+# In[12]:
 
 
 data_df = pd.DataFrame()
 y_var = ""
 
 
-# In[52]:
+# In[13]:
 
 
 def regression_plots(regression_data_df = data_df, y_variable = y_var, columns = 3):
@@ -31,7 +30,7 @@ def regression_plots(regression_data_df = data_df, y_variable = y_var, columns =
     fig,axs = plt.subplots(rows,columns, sharey=True,figsize = (rows*4,rows*4))
     if len(axs)==1:
         sns.regplot(x = regression_data_df[regression_data_df.columns.drop(y_variable).to_list()],
-                    y=regression_data_df[y_variable],ax=ax,robust=False)
+                    y=regression_data_df[y_variable],ax=axs,robust=False)
     
     for col,ax in enumerate(axs.flatten()):
         if col <len(regression_data_df.columns):
@@ -45,7 +44,7 @@ def regression_plots(regression_data_df = data_df, y_variable = y_var, columns =
 
 def stepwise_regression(regression_data_df = data_df, y_variable = y_var,constant = True, max_p = 0.05,only_positive=True):
     '''
-    This function iterates over the given data frame, trying to explain the y variable by all variables except iteself.
+    This function iterates over the given data frame, trying to explain the y variable by all variables except itself.
     The process stops once all variables are below the specified p-value. 
     By default only positive coefficients are accepted. Model filters until no negative coefficients are in the regression anymore.
     '''
@@ -92,20 +91,20 @@ def stepwise_regression(regression_data_df = data_df, y_variable = y_var,constan
 
 # # Intro
 
-# In[53]:
+# In[14]:
 
 
 st.title("Stepwise Regression Calculator")
 
 
-# In[54]:
+# In[15]:
 
 
 uploaded_file = st.file_uploader("Chose a CSV file that contains the date for the regression.")
 st.text("This must be a csv file that his build like below:")
 
 
-# In[55]:
+# In[16]:
 
 
 sample_df = pd.DataFrame({"Variable A":[1,2,3],"Variable B":[2,6,1],"Further Variables":[5,6,7]},index=pd.DatetimeIndex(["31/12/2020","31/12/2021","31/12/2022"]))
@@ -115,13 +114,13 @@ st.text("The first column of the csv must have dates, the first rows must have v
 
 # # Process
 
-# In[67]:
+# In[17]:
 
 
 format_dec = st.selectbox("German or English Format?", options=["German","English"],key="000")
 
 
-# In[68]:
+# In[18]:
 
 
 if uploaded_file is not None:
@@ -147,9 +146,34 @@ if uploaded_file is not None:
             sns.regplot(x = data_df[column],y=data_df[y_var],ax=ax,robust=False)
     fig.tight_layout()
     st.pyplot(fig=fig)
+    p_val = st.slider("At what P-Value do you want to make the cut for exclusion of a variable?",
+                      min_value=0,
+                      max_value=0.2,
+                      value=0.05,
+                      step=0.025,
+                      key="slider1")
+    only_positive = st.selectbox("Do you want to include only positive coefficients?",
+                                 options=["Yes","No"],
+                                 index=0,
+                                 key="pos_neg_select")
+    if only_positive == "Yes":
+        only_positive = True
+    else:
+        only_positive = False
+    constant = st.selectbox("Does your regression need a constant?",
+                                     options=["Yes","No"],
+                                     index=0,
+                                     key="constant_select")
+    if constant == "Yes":
+        constant = True
+    else:
+        only_positive = False
     st.text("Below you see the regression results")
-    st.text(stepwise_regression(regression_data_df = data_df, y_variable = y_var,constant = True, max_p = 0.05,only_positive=True)[0].summary().as_text()
-             )
+    st.text(stepwise_regression(regression_data_df = data_df,
+                                y_variable = y_var,
+                                constant = constant,
+                                max_p = p_val,
+                                only_positive=only_positive)[0].summary().as_text())
     
     
     filtered_var_df = stepwise_regression(regression_data_df = data_df, y_variable = y_var,constant = True, max_p = 0.05,only_positive=True)[1]
