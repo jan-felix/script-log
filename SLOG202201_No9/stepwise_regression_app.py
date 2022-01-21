@@ -21,7 +21,7 @@ data_df = pd.DataFrame()
 y_var = ""
 
 
-# In[13]:
+# In[19]:
 
 
 def regression_plots(regression_data_df = data_df, y_variable = y_var, columns = 3):
@@ -42,7 +42,7 @@ def regression_plots(regression_data_df = data_df, y_variable = y_var, columns =
     fig.tight_layout()
     return fig 
 
-def stepwise_regression(regression_data_df = data_df, y_variable = y_var,constant = True, max_p = 0.05,only_positive=True):
+def stepwise_regression(regression_data_df = data_df, y_variable = y_var,constant = True,keep_exog=2, max_p = 0.05,only_positive=True):
     '''
     This function iterates over the given data frame, trying to explain the y variable by all variables except itself.
     The process stops once all variables are below the specified p-value. 
@@ -58,7 +58,7 @@ def stepwise_regression(regression_data_df = data_df, y_variable = y_var,constan
     exog_vars = len(X.columns)
     
     #Iterate
-    while exog_vars >2:
+    while exog_vars >keep_exog:
         model = sm.OLS(endog = Y, exog = X)
         results = model.fit()
         
@@ -152,6 +152,12 @@ if uploaded_file is not None:
                       value=0.05,
                       step=0.025,
                       key="slider1")
+    keep_exog = st.slider("How many variables do you want to keep at least?",
+                      min_value=0,
+                      max_value=10,
+                      value=3,
+                      step=1,
+                      key="slider2")
     only_positive = st.selectbox("Do you want to include only positive coefficients?",
                                  options=["Yes","No"],
                                  index=0,
@@ -172,11 +178,17 @@ if uploaded_file is not None:
     st.text(stepwise_regression(regression_data_df = data_df,
                                 y_variable = y_var,
                                 constant = constant,
+                                keep_exog=keep_exog,
                                 max_p = p_val,
                                 only_positive=only_positive)[0].summary().as_text())
     
     
-    filtered_var_df = stepwise_regression(regression_data_df = data_df, y_variable = y_var,constant = True, max_p = 0.05,only_positive=True)[1]
+    filtered_var_df = stepwise_regression(regression_data_df = data_df,
+                                          y_variable = y_var,
+                                          constant = constant,
+                                          keep_exog=keep_exog,
+                                          max_p = p_val,
+                                          only_positive=only_positive)[1]
     columns = st.selectbox("How many columns of charts should the below have?", options=[1,2,3,4,5],index=3,key="003")
 
     reg_fig = regression_plots(regression_data_df = filtered_var_df, y_variable = y_var, columns = columns)
