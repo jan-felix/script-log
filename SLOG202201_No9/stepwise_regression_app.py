@@ -31,14 +31,15 @@ def regression_plots(regression_data_df = data_df, y_variable = y_var, columns =
     if type(axs) != np.ndarray:
         sns.regplot(x = regression_data_df[regression_data_df.columns.drop(y_variable).to_list()],
                     y=regression_data_df[y_variable],ax=axs,robust=False)
-    
-    for col,ax in enumerate(axs.flatten()):
-        if col <len(regression_data_df.columns):
-            column = regression_data_df.columns[col]
-            if column == y_variable:
-                continue
-            else:
-                sns.regplot(x = regression_data_df[column],y=regression_data_df[y_variable],ax=ax,robust=False)
+
+    if type(axs) == np.ndarray:
+        for col,ax in enumerate(axs.flatten()):
+            if col <len(regression_data_df.columns):
+                column = regression_data_df.columns[col]
+                if column == y_variable:
+                    continue
+                else:
+                    sns.regplot(x = regression_data_df[column],y=regression_data_df[y_variable],ax=ax,robust=False)
     fig.tight_layout()
     return fig 
 
