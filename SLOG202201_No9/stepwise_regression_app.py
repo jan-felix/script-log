@@ -147,7 +147,7 @@ if uploaded_file is not None:
     fig.tight_layout()
     st.pyplot(fig=fig)
     p_val = st.slider("At what P-Value do you want to make the cut for exclusion of a variable?",
-                      min_value=0,
+                      min_value=0.0,
                       max_value=0.2,
                       value=0.05,
                       step=0.025,
